@@ -7,12 +7,26 @@
 import { RemixBrowser } from "@remix-run/react";
 import { startTransition, StrictMode } from "react";
 import { hydrateRoot } from "react-dom/client";
+import { AdminClient } from "./components/admin.client";
+import { ClientOnly } from "./components/client-only";
 
-startTransition(() => {
+console.log(window.location.pathname);
+if (window.location.pathname === "/admin") {
   hydrateRoot(
-    document,
+    document.body,
     <StrictMode>
-      <RemixBrowser />
+      <ClientOnly fallback={<div>Admin is loading</div>}>
+        {() => <AdminClient />}
+      </ClientOnly>
     </StrictMode>
   );
-});
+} else {
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <RemixBrowser />
+      </StrictMode>
+    );
+  });
+}
