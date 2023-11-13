@@ -1,13 +1,33 @@
-import { Admin, EditGuesser, ListGuesser, Resource } from "react-admin";
-import jsonServerProvider from "ra-data-json-server";
+import { Admin, ListGuesser, Resource, ShowGuesser } from "react-admin";
+import { dataProvider } from "./dataProvider";
+import { authProvider } from "./authProvider";
 
-const dataProvider = jsonServerProvider("https://jsonplaceholder.typicode.com");
+import { PostCreate, PostEdit, PostList } from "./posts";
+
+import { Dashboard } from "./Dashboard";
+import { LoginPage } from "ra-supabase";
 
 export function AdminClient() {
   return (
-    <Admin basename="/admin" dataProvider={dataProvider}>
-      <Resource name="posts" list={ListGuesser} edit={EditGuesser} />
-      <Resource name="comments" list={ListGuesser} edit={EditGuesser} />
+    <Admin
+      dataProvider={dataProvider}
+      authProvider={authProvider}
+      dashboard={Dashboard}
+      loginPage={LoginPage}
+      basename="/admin"
+    >
+      <Resource
+        name="posts"
+        list={PostList}
+        edit={PostEdit}
+        create={PostCreate}
+      />
+      <Resource
+        name="comments"
+        list={ListGuesser}
+        recordRepresentation="name"
+        show={ShowGuesser}
+      />
     </Admin>
   );
 }
